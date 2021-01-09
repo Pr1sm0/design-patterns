@@ -191,7 +191,7 @@ class VideoplayerAdapter implements IVideoplayer {
   }
 }
 
-// client
+// client code
 
 const videoplayer:IVideoplayer = new VideoplayerAdapter("VLC", 100, VideoplayerType.FancyPlayer);
 videoplayer.play();
