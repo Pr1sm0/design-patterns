@@ -1,78 +1,60 @@
-enum Computer {
-  PC,
-  LAPTOP,
+interface AbstractFactory {
+  createPC(): AbstractPC;
+  createLaptop(): AbstractLaptop;
 }
 
-abstract class ComputerPart{
-
-  static getFactory(key:Computer){
-      const pcFactory = new PcFactory();
-      const laptopFactory = new LaptopFactory();
-
-      switch (key) {
-          case Computer.PC:
-              return pcFactory;
-          case Computer.LAPTOP:
-              return laptopFactory;
-          default:
-              return laptopFactory;
-      }
+class LvivFactory implements AbstractFactory {
+  createPC(): PC {
+    return new PC('PC made in Lviv');
   }
 
-  abstract getProcessor();
-  abstract getVideocard();
-}
-
-class PcProcessor {
-  makePart(){
-      return 'I`m the processor for a PC!';
-  }
-}
-class PcVideocard {
-  makePart(){
-      return 'I`m the videocard for a PC!';
-  }
-}
-class LaptopProcessor {
-  makePart(){
-      return 'I`m the processor for a laptop!';
-  }
-}
-class LaptopVideocard {
-  makePart(){
-      return 'I`m the videocard for a laptop!';
+  createLaptop(): Laptop {
+    return new Laptop('Laptop made in Lviv');
   }
 }
 
-class PcFactory extends ComputerPart{
-  getProcessor() {
-      return new PcProcessor();
-  }    
-  
-  getVideocard() {
-      return new PcVideocard();
+class KharkivFactory implements AbstractFactory {
+  createPC(): PC {
+    return new PC('PC made in Kharkiv');
+  }
+
+  createLaptop(): Laptop {
+    return new Laptop('Laptop made in Kharkiv');
   }
 }
 
-class LaptopFactory extends ComputerPart{
-  getProcessor() {
-    return new LaptopProcessor();
-}    
-
-  getVideocard() {
-    return new LaptopVideocard();
-  }
+interface AbstractPC {
+  methodA(): void;
+  methodB(): void;
 }
 
+class PC implements AbstractPC {
+  constructor(value: String) {
+    console.log(value);
+  }
+  methodA(): void {}
+  methodB(): void {}
+}
 
-let factory =  ComputerPart.getFactory(Computer.PC);
-let processor = factory.getProcessor();
+interface AbstractLaptop {
+  methodA(): void;
+  methodB(): void;
+}
 
-console.log(processor.makePart());
+class Laptop implements AbstractLaptop {
+  constructor(value: String) {
+    console.log(value);
+  }
+  methodA(): void {}
+  methodB(): void {}
+}
 
-factory =  ComputerPart.getFactory(Computer.LAPTOP);
-processor = factory.getProcessor();
-let videocard = factory.getVideocard();
+(function main() {
+  const lvivFactory = new LvivFactory();
+  lvivFactory.createPC();
+  lvivFactory.createLaptop();
 
-console.log(processor.makePart());
-console.log(videocard.makePart());
+  const kharkivFactory = new KharkivFactory();
+  kharkivFactory.createPC();
+  kharkivFactory.createLaptop();
+})();
