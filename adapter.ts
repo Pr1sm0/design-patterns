@@ -154,7 +154,7 @@ class VideoplayerAdapter implements IVideoplayer {
     }
   }
 
-	public setVolume(volume: number): void {
+  public setVolume(volume: number): void {
     if (this.type === VideoplayerType.FancyPlayer) {
       const videoplayer1 = new FancyPlayer(this.name, this.volume);
       videoplayer1.setVolume(volume);
@@ -166,7 +166,7 @@ class VideoplayerAdapter implements IVideoplayer {
     }
   }
 
-	public getVolume(): void {
+  public getVolume(): void {
     if (this.type === VideoplayerType.FancyPlayer) {
       const videoplayer1 = new FancyPlayer(this.name, this.volume);
       videoplayer1.getVolume();
@@ -178,7 +178,7 @@ class VideoplayerAdapter implements IVideoplayer {
     }
   }
 
-	public mute(mute: boolean): void {
+  public mute(mute: boolean): void {
     if (this.type === VideoplayerType.FancyPlayer) {
       const videoplayer1 = new FancyPlayer(this.name, this.volume);
       videoplayer1.mute(mute);
