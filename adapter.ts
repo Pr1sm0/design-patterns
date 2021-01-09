@@ -3,11 +3,11 @@ interface IVideoplayer {
   name: string;
   volume: number;
   play(): void;
-	load(url: string): void;
-	pause(): void;
-	setVolume(volume: number): void;
-	getVolume(): void;
-	mute(mute: boolean): void;
+  load(url: string): void;
+  pause(): void;
+  setVolume(volume: number): void;
+  getVolume(): void;
+  mute(mute: boolean): void;
 }
 
 // adaptee (3rd party)
