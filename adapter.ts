@@ -15,7 +15,7 @@ interface IFancyPlayer {
   name: string;
   volume: number;
   playUrl(): void;
-  setPause(): void;
+  setPause(isInPause: boolean): void;
   setVolume(volume: number): void;
   getVolume(): void;
   mute(mute: boolean): void;
@@ -44,8 +44,12 @@ class FancyPlayer implements IFancyPlayer {
     console.log(`${this.name} is playing a video!`);
   }
 
-  public setPause(): void {
-    console.log(`${this.name} is paused!`);
+  public setPause(isInPause: boolean): void {
+    if(isInPause){
+      console.log(`${this.name} is paused!`);
+    } else {
+      console.log(`${this.name} is playing!`);
+    }
   }
 
   public setVolume(volume: number): void {
@@ -101,100 +105,83 @@ class AnotherFancyPlayer implements IAnotherFancyPlayer {
   }
 }
 
-enum VideoplayerType {
-  FancyPlayer,
-  AnotherFancyPlayer,
-}
+// adapters
+class FancyPlayerAdapter implements IVideoplayer {
+  name: string;
+  volume: number;
+  private player: FancyPlayer;
 
-// adapter
-
-class VideoplayerAdapter implements IVideoplayer {
-  public name: string;
-  public volume: number;
-  public type: VideoplayerType;
-  constructor(name: string, volume: number, type: VideoplayerType) {
-    this.type = type;
+  constructor(name: string, volume: number) {
     this.name = name;
     this.volume = volume;
+    this.player = new FancyPlayer(this.name, this.volume);
   }
 
-  public play(): void {
-    if (this.type === VideoplayerType.FancyPlayer) {
-      const videoplayer1 = new FancyPlayer(this.name, this.volume);
-      videoplayer1.playUrl();
-    } else if (this.type === VideoplayerType.AnotherFancyPlayer) {
-      const videoplayer2 = new AnotherFancyPlayer(this.name, this.volume);
-      videoplayer2.play("https://www.youtube.com/watch?v=btPJPFnesV4");
-    } else {
-      throw new Error("Unknown videoplayer!");
-    }
+  getVolume(): void {
+    return this.player.getVolume();
   }
 
-  public load(url: string): void {
-    if (this.type === VideoplayerType.FancyPlayer) {
-      const videoplayer1 = new FancyPlayer(this.name, this.volume);
-      videoplayer1.playUrl();
-    } else if (this.type === VideoplayerType.AnotherFancyPlayer) {
-      const videoplayer2 = new AnotherFancyPlayer(this.name, this.volume);
-      videoplayer2.play(url);
-    } else {
-      throw new Error("Unknown videoplayer!");
-    }
+  load(url: string): void {
+    return this.player.playUrl();
   }
 
-  public pause(): void {
-    if (this.type === VideoplayerType.FancyPlayer) {
-      const videoplayer1 = new FancyPlayer(this.name, this.volume);
-      videoplayer1.setPause();
-    } else if (this.type === VideoplayerType.AnotherFancyPlayer) {
-      const videoplayer2 = new AnotherFancyPlayer(this.name, this.volume);
-      videoplayer2.pause(true);
-    } else {
-      throw new Error("Unknown videoplayer!");
-    }
+  mute(mute: boolean): void {
+    return this.player.mute(mute);
   }
 
-  public setVolume(volume: number): void {
-    if (this.type === VideoplayerType.FancyPlayer) {
-      const videoplayer1 = new FancyPlayer(this.name, this.volume);
-      videoplayer1.setVolume(volume);
-    } else if (this.type === VideoplayerType.AnotherFancyPlayer) {
-      const videoplayer2 = new AnotherFancyPlayer(this.name, this.volume);
-      videoplayer2.setVolume(volume);
-    } else {
-      throw new Error("Unknown videoplayer!");
-    }
+  pause(): void {
+    return this.player.setPause(true);
   }
 
-  public getVolume(): void {
-    if (this.type === VideoplayerType.FancyPlayer) {
-      const videoplayer1 = new FancyPlayer(this.name, this.volume);
-      videoplayer1.getVolume();
-    } else if (this.type === VideoplayerType.AnotherFancyPlayer) {
-      const videoplayer2 = new AnotherFancyPlayer(this.name, this.volume);
-      videoplayer2.getVolume();
-    } else {
-      throw new Error("Unknown videoplayer!");
-    }
+  play(): void {
+    return this.player.setPause(false);
   }
 
-  public mute(mute: boolean): void {
-    if (this.type === VideoplayerType.FancyPlayer) {
-      const videoplayer1 = new FancyPlayer(this.name, this.volume);
-      videoplayer1.mute(mute);
-    } else if (this.type === VideoplayerType.AnotherFancyPlayer) {
-      const videoplayer2 = new AnotherFancyPlayer(this.name, this.volume);
-      videoplayer2.mute(mute);
-    } else {
-      throw new Error("Unknown videoplayer!");
-    }
+  setVolume(volume: number): void {
+    return this.player.setVolume(volume);
+  }
+}
+
+class AnotherFancyPlayerAdapter implements IVideoplayer {
+  name: string;
+  volume: number;
+  private player: AnotherFancyPlayer;
+
+  constructor(name: string, volume: number) {
+    this.name = name;
+    this.volume = volume;
+    this.player = new AnotherFancyPlayer(this.name, this.volume);
+  }
+
+  getVolume(): void {
+    return this.player.getVolume();
+  }
+
+  load(url: string): void {
+    return this.player.play(url);
+  }
+
+  mute(mute: boolean): void {
+    return this.player.mute(mute);
+  }
+
+  pause(): void {
+    return this.player.pause(true);
+  }
+
+  play(): void {
+    return this.player.pause(false);
+  }
+
+  setVolume(volume: number): void {
+    return this.player.setVolume(volume);
   }
 }
 
 // client code
 
-const videoplayer:IVideoplayer = new VideoplayerAdapter("VLC", 100, VideoplayerType.FancyPlayer);
+const videoplayer:IVideoplayer = new FancyPlayerAdapter("VLC", 100);
 videoplayer.play();
 
-const videoplayer2:IVideoplayer = new VideoplayerAdapter("SMP", 99, VideoplayerType.AnotherFancyPlayer);
+const videoplayer2:IVideoplayer = new AnotherFancyPlayerAdapter("SMP", 99);
 videoplayer2.play();
