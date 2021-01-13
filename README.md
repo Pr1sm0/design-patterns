@@ -4,11 +4,9 @@ Design Patterns:
 
 Implementation of abstract factory, adapter, façade with TypeScript
 
-
 Algorithms:
 
 Merge sort, linear search, bubble sort implementation with TypeScript
-
 
 To install dependencies - run `npm ci` from the root of the project
 
