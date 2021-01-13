@@ -1,4 +1,4 @@
-# design-patterns
+# design-patterns-and-algorithms
 
 Implementation of abstract factory, adapter, façade with TypeScript
 
