@@ -1,50 +1,32 @@
-function mergeSort(items: number[]): number[] {
-  return divide(items);
+function mergeSort(arr: number[]): number[] {
+
+  if(arr.length <= 1){
+    return arr;
+  }
+
+  let halfArr = Math.floor(arr.length / 2);
+  let leftPart = arr.slice(0, halfArr);
+  let rightPart = arr.slice(halfArr);
+
+  return merge(mergeSort(leftPart), mergeSort(rightPart));
 }
 
-function divide(items: number[]): number[] {
-  let halfLength = Math.ceil(items.length / 2);
-  let low = items.slice(0, halfLength);
-  let high = items.slice(halfLength);
-  if (halfLength > 1) {
-      low = divide(low);
-      high = divide(high);
+function merge(leftPart: number[], rightPart: number[]): number[] {
+  const array: number[] = [];
+  let leftIndex = 0;
+  let rightIndex = 0;
+  
+  while(leftIndex < leftPart.length && rightIndex < rightPart.length) {
+    if(leftPart[leftIndex] < rightPart[rightIndex]){
+      array.push(leftPart[leftIndex]);
+      leftIndex++;
+    } else {
+      array.push(rightPart[rightIndex]);
+      rightIndex++;
+    }
   }
-  return combine(low, high);
-}
-
-function combine(low: number[], high: number[]): number[] {
-  let indexLow = 0;
-  let indexHigh = 0;
-  let lengthLow = low.length;
-  let lengthHigh = high.length;
-  let combined = [];
-  while (indexLow < lengthLow || indexHigh < lengthHigh) {
-      let lowItem = low[indexLow];
-      let highItem = high[indexHigh];
-      if (lowItem !== undefined) {
-          if (highItem === undefined) {
-              combined.push(lowItem);
-              indexLow++;
-          } else {
-              if (lowItem <= highItem) {
-                  combined.push(lowItem);
-                  indexLow++;
-              } else {
-                  combined.push(highItem);
-                  indexHigh++;
-              }
-          }
-      } else {
-          if (highItem !== undefined) {
-              combined.push(highItem);
-              indexHigh++;
-          }
-      }
-  }
-  return combined;
+  return array.concat(leftPart.slice(leftIndex)).concat(rightPart.slice(rightIndex));
 }
 
 const result = mergeSort([23,444,32,786,0,-99,12,54,753,43]);
 console.log("Sorted array:", result);
-
